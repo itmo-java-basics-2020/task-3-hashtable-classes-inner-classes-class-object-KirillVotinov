@@ -2,14 +2,13 @@ package ru.itmo.java;
 
 import java.util.Arrays;
 
-
 public class HashTable {
 
     private static final int DEFAULT_CAPACITY = 1000;
 
     private static final double DEFAULT_LOAD_FACTOR = 0.5;
 
-    private static final int GAP = 307;
+    private static final int DEFAULT_GAP = 113;
 
     private final double loadFactor;
 
@@ -25,12 +24,12 @@ public class HashTable {
         this(DEFAULT_CAPACITY);
     }
 
-    HashTable(int capacity) {
-        this(capacity, DEFAULT_LOAD_FACTOR);
+    HashTable(int initialCapacity) {
+        this(initialCapacity, DEFAULT_LOAD_FACTOR);
     }
 
-    HashTable(double loadFactor) {
-        this(DEFAULT_CAPACITY, loadFactor);
+    HashTable(double initialLoadFactor) {
+        this(DEFAULT_CAPACITY, initialLoadFactor);
     }
 
     HashTable(int initialCapacity, double initialLoadFactor) {
@@ -50,7 +49,7 @@ public class HashTable {
         int hash = (key.hashCode() % array.length + array.length) % array.length;
 
         while (deleted[hash] || array[hash] != null && !key.equals(array[hash].key)) {
-            hash = (hash + GAP) % array.length;
+            hash = (hash + DEFAULT_GAP) % array.length;
         }
 
         return hash;
@@ -61,7 +60,7 @@ public class HashTable {
         int hash = (key.hashCode() % array.length + array.length) % array.length;
 
         while (array[hash] != null) {
-            hash = (hash + GAP) % array.length;
+            hash = (hash + DEFAULT_GAP) % array.length;
         }
 
         return hash;
