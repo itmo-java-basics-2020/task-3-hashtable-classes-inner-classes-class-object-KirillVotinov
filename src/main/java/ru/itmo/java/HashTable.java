@@ -151,7 +151,7 @@ public class HashTable {
         return Arrays.toString(array);
     }
 
-    private class Entry {
+    private static class Entry {
 
         Object key;
 
