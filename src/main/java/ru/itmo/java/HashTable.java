@@ -146,20 +146,22 @@ public class HashTable {
     }
 
     private static class Entry {
-        Object key;
+        private Object key;
 
-        Object value;
+        private Object value;
 
-        Entry(Object initialKey, Object initialValue) {
+        public Entry(Object initialKey, Object initialValue) {
             this.key = initialKey;
             this.value = initialValue;
         }
 
+        public Object getKey() {return this.key;}
+
+        public Object getValue() {return this.value;}
+
         @Override
         public String toString() {
-            StringBuilder sb = new StringBuilder("key=");
-            sb.append(key).append(", value=").append(value);
-            return sb.toString();
+            return String.format("key=%s, value=%s", key.toString(), value.toString());
         }
     }
 
