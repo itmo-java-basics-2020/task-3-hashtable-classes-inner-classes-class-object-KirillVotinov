@@ -20,20 +20,19 @@ public class HashTable {
 
     private boolean[] deleted;
 
-    HashTable() {
-        this(DEFAULT_CAPACITY);
+    public HashTable() {
+        this(DEFAULT_CAPACITY, DEFAULT_LOAD_FACTOR);
     }
 
-    HashTable(int initialCapacity) {
+    public HashTable(int initialCapacity) {
         this(initialCapacity, DEFAULT_LOAD_FACTOR);
     }
 
-    HashTable(double initialLoadFactor) {
+    public HashTable(double initialLoadFactor) {
         this(DEFAULT_CAPACITY, initialLoadFactor);
     }
 
-    HashTable(int initialCapacity, double initialLoadFactor) {
-
+    public HashTable(int initialCapacity, double initialLoadFactor) {
         this.array = new Entry[initialCapacity];
         this.deleted = new boolean[initialCapacity];
 
@@ -44,8 +43,7 @@ public class HashTable {
         this.threshold = (int) (this.loadFactor * initialCapacity);
     }
 
-    int indexInTable(Object key) {
-
+    private int getIndexInTable(Object key) {
         int hash = (key.hashCode() % array.length + array.length) % array.length;
 
         while (deleted[hash] || array[hash] != null && !key.equals(array[hash].key)) {
@@ -53,28 +51,28 @@ public class HashTable {
         }
 
         return hash;
+
     }
 
-    int indexToPutToTable(Object key) {
-
-        int hash = (key.hashCode() % array.length + array.length) % array.length;
+    private int getIndexToPutToTable(Object key) {
+        int arraySize = array.length;
+        int hash = (key.hashCode() % arraySize + arraySize) % arraySize;
 
         while (array[hash] != null) {
-            hash = (hash + DEFAULT_GAP) % array.length;
+            hash = (hash + DEFAULT_GAP) % arraySize;
         }
 
         return hash;
     }
 
-    Object put(Object key, Object value) {
-
+    public Object put(Object key, Object value) {
         Entry newElement = new Entry(key, value);
 
-        int index = indexInTable(key);
+        int index = getIndexInTable(key);
 
         if (array[index] == null) {
 
-            index = indexToPutToTable(key);
+            index = getIndexToPutToTable(key);
 
             if (deleted[index]) {
                 deleted[index] = false;
@@ -96,9 +94,8 @@ public class HashTable {
         return oldElement.value;
     }
 
-    Object get(Object key) {
-
-        int index = indexInTable(key);
+    public Object get(Object key) {
+        int index = getIndexInTable(key);
 
         if (array[index] == null) {
             return null;
@@ -107,9 +104,8 @@ public class HashTable {
         return array[index].value;
     }
 
-    Object remove(Object key) {
-
-        int index = indexInTable(key);
+    public Object remove(Object key) {
+        int index = getIndexInTable(key);
 
         if (array[index] == null) {
             return null;
@@ -123,17 +119,16 @@ public class HashTable {
         return deletedElement.value;
     }
 
-    int size() {
+    public int size() {
         return this.size;
     }
 
-    void resize() {
-
-        var oldArray = array;
-
-        array = new Entry[oldArray.length * 2];
-        deleted = new boolean[array.length];
-        threshold = (int) (loadFactor * oldArray.length * 2);
+    private void resize() {
+        Entry[] oldArray = array;
+        int newArraySize = oldArray.length * 2;
+        array = new Entry[newArraySize];
+        deleted = new boolean[newArraySize];
+        threshold = (int) (loadFactor * newArraySize);
         size = 0;
 
         for (Entry element : oldArray) {
@@ -151,7 +146,6 @@ public class HashTable {
     }
 
     private static class Entry {
-
         Object key;
 
         Object value;
